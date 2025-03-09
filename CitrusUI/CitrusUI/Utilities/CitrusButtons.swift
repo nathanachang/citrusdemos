@@ -1,24 +1,20 @@
-//
-//  CitrusButtons.swift
-//  CitrusUI
-//
-//  Created by Paul Minyoo Kim on 3/9/25.
-//
-
 import SwiftUI
 
 // MARK: - Button Style Enum
 enum CitrusButtonStyle {
-    case filled
+    case primary
+    case secondary
     case outlined
-    case bare
+    case pink
+    case gray
 }
 
 // MARK: - Button Size Enum
 enum CitrusButtonSize {
-    case large
+    case compact
     case medium
-    case small
+    case large
+    case full
 }
 
 // MARK: - CitrusButton Component
@@ -28,31 +24,28 @@ struct CitrusButton: View {
     private let action: () -> Void
     private let style: CitrusButtonStyle
     private let size: CitrusButtonSize
-    private let isFullWidth: Bool
-    private let leadingIcon: String?
-    private let trailingIcon: String?
+    private let icon: String?
     private let isDisabled: Bool
     
     // MARK: - Constants
-    private let accentColor = Color(hex: "#9747ff")
+    private let primaryColor = Color(hex: "#9747ff")
+    private let secondaryColor = Color(hex: "#c77dff")
+    private let pinkColor = Color(hex: "#ffbeff")
+    private let grayColor = Color(hex: "#d4d4dc")
     
     // MARK: - Initializer
     init(
         title: String,
-        style: CitrusButtonStyle = .filled,
+        style: CitrusButtonStyle = .primary,
         size: CitrusButtonSize = .medium,
-        isFullWidth: Bool = false,
-        leadingIcon: String? = nil,
-        trailingIcon: String? = nil,
+        icon: String? = "scissors",
         isDisabled: Bool = false,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.style = style
         self.size = size
-        self.isFullWidth = isFullWidth
-        self.leadingIcon = leadingIcon
-        self.trailingIcon = trailingIcon
+        self.icon = icon
         self.isDisabled = isDisabled
         self.action = action
     }
@@ -61,25 +54,21 @@ struct CitrusButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {
-                // Leading icon
-                if let leadingIcon = leadingIcon {
-                    Image(systemName: leadingIcon)
+                // Icon
+                if let icon = icon {
+                    Image(systemName: icon)
                         .font(.system(size: iconSize))
                 }
                 
                 // Button text
                 Text(title)
                     .font(.system(size: fontSize, weight: .medium))
-                
-                // Trailing icon
-                if let trailingIcon = trailingIcon {
-                    Image(systemName: trailingIcon)
-                        .font(.system(size: iconSize))
-                }
+                    .lineLimit(1)
             }
             .padding(.horizontal, horizontalPadding)
             .padding(.vertical, verticalPadding)
-            .frame(maxWidth: isFullWidth ? .infinity : nil)
+            .frame(maxWidth: buttonWidth)
+            .frame(height: buttonHeight)
             .background(backgroundColor)
             .foregroundColor(foregroundColor)
             .cornerRadius(cornerRadius)
@@ -89,33 +78,48 @@ struct CitrusButton: View {
             )
         }
         .disabled(isDisabled)
-        .opacity(isDisabled ? 0.6 : 1.0)
     }
     
     // MARK: - Computed Properties
     private var backgroundColor: Color {
+        if isDisabled {
+            return grayColor
+        }
+        
         switch style {
-        case .filled:
-            return accentColor
-        case .outlined, .bare:
+        case .primary:
+            return primaryColor
+        case .secondary:
+            return secondaryColor
+        case .outlined:
             return Color.clear
+        case .pink:
+            return pinkColor
+        case .gray:
+            return grayColor
         }
     }
     
     private var foregroundColor: Color {
-        switch style {
-        case .filled:
+        if isDisabled {
             return .white
-        case .outlined, .bare:
-            return accentColor
+        }
+        
+        switch style {
+        case .primary, .secondary, .gray:
+            return .white
+        case .outlined:
+            return .black
+        case .pink:
+            return .black
         }
     }
     
     private var borderColor: Color {
         switch style {
         case .outlined:
-            return accentColor
-        case .filled, .bare:
+            return Color.gray.opacity(0.3)
+        default:
             return Color.clear
         }
     }
@@ -124,193 +128,67 @@ struct CitrusButton: View {
         switch style {
         case .outlined:
             return 1
-        case .filled, .bare:
+        default:
             return 0
         }
     }
     
     private var fontSize: CGFloat {
         switch size {
-        case .large:
-            return 16
-        case .medium:
+        case .compact:
             return 14
-        case .small:
-            return 12
+        case .medium, .large, .full:
+            return 16
         }
     }
     
     private var iconSize: CGFloat {
         switch size {
-        case .large:
-            return 18
-        case .medium:
-            return 16
-        case .small:
+        case .compact:
             return 14
+        case .medium, .large, .full:
+            return 16
+        }
+    }
+    
+    private var buttonHeight: CGFloat {
+        switch size {
+        case .compact:
+            return 40
+        case .medium, .large, .full:
+            return 48
         }
     }
     
     private var horizontalPadding: CGFloat {
         switch size {
-        case .large:
-            return 24
+        case .compact:
+            return 12
         case .medium:
             return 16
-        case .small:
-            return 12
+        case .large, .full:
+            return 20
         }
     }
     
     private var verticalPadding: CGFloat {
-        switch size {
-        case .large:
-            return 14
-        case .medium:
-            return 10
-        case .small:
-            return 8
-        }
+        return 12
     }
     
     private var cornerRadius: CGFloat {
+        return 8
+    }
+    
+    private var buttonWidth: CGFloat? {
         switch size {
-        case .large:
-            return 8
+        case .compact:
+            return 80
         case .medium:
-            return 6
-        case .small:
-            return 4
-        }
-    }
-}
-
-// MARK: - Toggle Button Component
-struct CitrusToggleButton: View {
-    // MARK: - Properties
-    private let title: String
-    private let isSelected: Bool
-    private let action: (Bool) -> Void
-    private let size: CitrusButtonSize
-    private let isFullWidth: Bool
-    private let leadingIcon: String?
-    private let trailingIcon: String?
-    private let isDisabled: Bool
-    
-    // MARK: - Constants
-    private let accentColor = Color(hex: "#9747ff")
-    
-    // MARK: - Initializer
-    init(
-        title: String,
-        isSelected: Bool,
-        size: CitrusButtonSize = .medium,
-        isFullWidth: Bool = false,
-        leadingIcon: String? = nil,
-        trailingIcon: String? = nil,
-        isDisabled: Bool = false,
-        action: @escaping (Bool) -> Void
-    ) {
-        self.title = title
-        self.isSelected = isSelected
-        self.size = size
-        self.isFullWidth = isFullWidth
-        self.leadingIcon = leadingIcon
-        self.trailingIcon = trailingIcon
-        self.isDisabled = isDisabled
-        self.action = action
-    }
-    
-    // MARK: - Body
-    var body: some View {
-        Button(action: {
-            action(!isSelected)
-        }) {
-            HStack(spacing: 8) {
-                // Leading icon
-                if let leadingIcon = leadingIcon {
-                    Image(systemName: leadingIcon)
-                        .font(.system(size: iconSize))
-                }
-                
-                // Button text
-                Text(title)
-                    .font(.system(size: fontSize, weight: .medium))
-                
-                // Trailing icon
-                if let trailingIcon = trailingIcon {
-                    Image(systemName: trailingIcon)
-                        .font(.system(size: iconSize))
-                }
-            }
-            .padding(.horizontal, horizontalPadding)
-            .padding(.vertical, verticalPadding)
-            .frame(maxWidth: isFullWidth ? .infinity : nil)
-            .background(isSelected ? accentColor : Color.clear)
-            .foregroundColor(isSelected ? .white : accentColor)
-            .cornerRadius(cornerRadius)
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(accentColor, lineWidth: 1)
-            )
-        }
-        .disabled(isDisabled)
-        .opacity(isDisabled ? 0.6 : 1.0)
-    }
-    
-    // MARK: - Computed Properties
-    private var fontSize: CGFloat {
-        switch size {
+            return 160
         case .large:
-            return 16
-        case .medium:
-            return 14
-        case .small:
-            return 12
-        }
-    }
-    
-    private var iconSize: CGFloat {
-        switch size {
-        case .large:
-            return 18
-        case .medium:
-            return 16
-        case .small:
-            return 14
-        }
-    }
-    
-    private var horizontalPadding: CGFloat {
-        switch size {
-        case .large:
-            return 24
-        case .medium:
-            return 16
-        case .small:
-            return 12
-        }
-    }
-    
-    private var verticalPadding: CGFloat {
-        switch size {
-        case .large:
-            return 14
-        case .medium:
-            return 10
-        case .small:
-            return 8
-        }
-    }
-    
-    private var cornerRadius: CGFloat {
-        switch size {
-        case .large:
-            return 8
-        case .medium:
-            return 6
-        case .small:
-            return 4
+            return 300
+        case .full:
+            return .infinity
         }
     }
 }
@@ -318,85 +196,87 @@ struct CitrusToggleButton: View {
 // MARK: - Preview
 struct CitrusButton_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(spacing: 20) {
-            Group {
-                Text("Regular Buttons")
-                    .font(.headline)
-                
-                // Filled Buttons
-                Text("Filled Buttons")
-                    .font(.subheadline)
-                
-                HStack(spacing: 16) {
-                    CitrusButton(title: "Large", size: .large) {}
-                    CitrusButton(title: "Medium") {}
-                    CitrusButton(title: "Small", size: .small) {}
+        ScrollView {
+            VStack(spacing: 30) {
+                Group {
+                    Text("Primary Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", size: .compact) {}
+                        CitrusButton(title: "[Text]", size: .medium) {}
+                        CitrusButton(title: "[Text]", size: .large) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", size: .full) {}
                 }
                 
-                // Outlined Buttons
-                Text("Outlined Buttons")
-                    .font(.subheadline)
-                
-                HStack(spacing: 16) {
-                    CitrusButton(title: "Large", style: .outlined, size: .large) {}
-                    CitrusButton(title: "Medium", style: .outlined) {}
-                    CitrusButton(title: "Small", style: .outlined, size: .small) {}
+                Group {
+                    Text("Secondary Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", style: .secondary, size: .compact) {}
+                        CitrusButton(title: "[Text]", style: .secondary, size: .medium) {}
+                        CitrusButton(title: "[Text]", style: .secondary, size: .large) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .secondary, size: .full) {}
                 }
                 
-                // Bare Buttons
-                Text("Bare Buttons")
-                    .font(.subheadline)
+                Group {
+                    Text("Outlined Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", style: .outlined, size: .compact) {}
+                        CitrusButton(title: "[Text]", style: .outlined, size: .medium) {}
+                        CitrusButton(title: "[Text]", style: .outlined, size: .large) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .outlined, size: .full) {}
+                }
                 
-                HStack(spacing: 16) {
-                    CitrusButton(title: "Large", style: .bare, size: .large) {}
-                    CitrusButton(title: "Medium", style: .bare) {}
-                    CitrusButton(title: "Small", style: .bare, size: .small) {}
+                Group {
+                    Text("Pink Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", style: .pink, size: .compact) {}
+                        CitrusButton(title: "[Text]", style: .pink, size: .medium) {}
+                        CitrusButton(title: "[Text]", style: .pink, size: .large) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .pink, size: .full) {}
+                }
+                
+                Group {
+                    Text("Gray Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", style: .gray, size: .compact) {}
+                        CitrusButton(title: "[Text]", style: .gray, size: .medium) {}
+                        CitrusButton(title: "[Text]", style: .gray, size: .large) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .gray, size: .full) {}
+                }
+                
+                Group {
+                    Text("Disabled Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", size: .compact, isDisabled: true) {}
+                        CitrusButton(title: "[Text]", size: .medium, isDisabled: true) {}
+                        CitrusButton(title: "[Text]", size: .large, isDisabled: true) {}
+                    }
+                    
+                    CitrusButton(title: "[Text]", size: .full, isDisabled: true) {}
                 }
             }
-            
-            Group {
-                Text("Width Options")
-                    .font(.headline)
-                
-                CitrusButton(title: "Hug Width", isFullWidth: false) {}
-                CitrusButton(title: "Full Width", isFullWidth: true) {}
-            }
-            
-            Group {
-                Text("With Icons")
-                    .font(.headline)
-                
-                CitrusButton(title: "Leading Icon", leadingIcon: "star") {}
-                CitrusButton(title: "Trailing Icon", trailingIcon: "arrow.right") {}
-                CitrusButton(title: "Both Icons", leadingIcon: "star", trailingIcon: "arrow.right") {}
-            }
-            
-            Group {
-                Text("Toggle Buttons")
-                    .font(.headline)
-                
-                HStack(spacing: 16) {
-                    CitrusToggleButton(title: "Selected", isSelected: true) { _ in }
-                    CitrusToggleButton(title: "Unselected", isSelected: false) { _ in }
-                }
-                
-                HStack(spacing: 16) {
-                    CitrusToggleButton(title: "Large", isSelected: true, size: .large) { _ in }
-                    CitrusToggleButton(title: "Medium", isSelected: true) { _ in }
-                    CitrusToggleButton(title: "Small", isSelected: true, size: .small) { _ in }
-                }
-            }
-            
-            Group {
-                Text("Disabled State")
-                    .font(.headline)
-                
-                HStack(spacing: 16) {
-                    CitrusButton(title: "Disabled", isDisabled: true) {}
-                    CitrusToggleButton(title: "Disabled", isSelected: true, isDisabled: true) { _ in }
-                }
-            }
+            .padding()
         }
-        .padding()
     }
 }

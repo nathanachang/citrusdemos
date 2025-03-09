@@ -1,211 +1,157 @@
-//
-//  ButtonExampleScreen.swift
-//  CitrusUI
-//
-//  Created by Paul Minyoo Kim on 3/9/25.
-//
-
 import SwiftUI
 
 struct ButtonExampleView: View {
-    @State private var isToggled = false
-    
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 30) {
                 Text("🍊 Citrus Buttons")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                // Regular Button Examples
-                sectionHeader("Regular Buttons")
-                
+                // Primary Buttons
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Filled Buttons")
+                    Text("Primary Buttons")
                         .font(.headline)
                     
                     HStack(spacing: 16) {
-                        CitrusButton(title: "Large", size: .large) {
-                            print("Large button tapped")
+                        CitrusButton(title: "[Text]", size: .compact) {
+                            print("Compact primary button tapped")
                         }
                         
-                        CitrusButton(title: "Medium") {
-                            print("Medium button tapped")
-                        }
-                        
-                        CitrusButton(title: "Small", size: .small) {
-                            print("Small button tapped")
+                        CitrusButton(title: "[Text]") {
+                            print("Medium primary button tapped")
                         }
                     }
                     
+                    CitrusButton(title: "[Text]", size: .full) {
+                        print("Full width primary button tapped")
+                    }
+                }
+                
+                // Secondary Buttons
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Secondary Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", style: .secondary, size: .compact) {
+                            print("Compact secondary button tapped")
+                        }
+                        
+                        CitrusButton(title: "[Text]", style: .secondary) {
+                            print("Medium secondary button tapped")
+                        }
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .secondary, size: .full) {
+                        print("Full width secondary button tapped")
+                    }
+                }
+                
+                // Outlined Buttons
+                VStack(alignment: .leading, spacing: 16) {
                     Text("Outlined Buttons")
                         .font(.headline)
                     
                     HStack(spacing: 16) {
-                        CitrusButton(
-                            title: "Large",
-                            style: .outlined,
-                            size: .large
-                        ) {
-                            print("Large outlined button tapped")
+                        CitrusButton(title: "[Text]", style: .outlined, size: .compact) {
+                            print("Compact outlined button tapped")
                         }
                         
-                        CitrusButton(
-                            title: "Medium",
-                            style: .outlined
-                        ) {
+                        CitrusButton(title: "[Text]", style: .outlined) {
                             print("Medium outlined button tapped")
-                        }
-                        
-                        CitrusButton(
-                            title: "Small",
-                            style: .outlined,
-                            size: .small
-                        ) {
-                            print("Small outlined button tapped")
                         }
                     }
                     
-                    Text("Bare Buttons")
+                    CitrusButton(title: "[Text]", style: .outlined, size: .full) {
+                        print("Full width outlined button tapped")
+                    }
+                }
+                
+                // Pink Buttons
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Pink Buttons")
                         .font(.headline)
                     
                     HStack(spacing: 16) {
-                        CitrusButton(
-                            title: "Large",
-                            style: .bare,
-                            size: .large
-                        ) {
-                            print("Large bare button tapped")
+                        CitrusButton(title: "[Text]", style: .pink, size: .compact) {
+                            print("Compact pink button tapped")
                         }
                         
-                        CitrusButton(
-                            title: "Medium",
-                            style: .bare
-                        ) {
-                            print("Medium bare button tapped")
+                        CitrusButton(title: "[Text]", style: .pink) {
+                            print("Medium pink button tapped")
                         }
-                        
-                        CitrusButton(
-                            title: "Small",
-                            style: .bare,
-                            size: .small
-                        ) {
-                            print("Small bare button tapped")
-                        }
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .pink, size: .full) {
+                        print("Full width pink button tapped")
                     }
                 }
                 
-                // Width Options
-                sectionHeader("Width Options")
-                
+                // Gray Buttons
                 VStack(alignment: .leading, spacing: 16) {
-                    CitrusButton(
-                        title: "Hug Width Button",
-                        isFullWidth: false
-                    ) {
-                        print("Hug width button tapped")
-                    }
-                    
-                    CitrusButton(
-                        title: "Full Width Button",
-                        isFullWidth: true
-                    ) {
-                        print("Full width button tapped")
-                    }
-                }
-                
-                // Buttons with Icons
-                sectionHeader("Buttons with Icons")
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    CitrusButton(
-                        title: "Leading Icon",
-                        leadingIcon: "star"
-                    ) {
-                        print("Button with leading icon tapped")
-                    }
-                    
-                    CitrusButton(
-                        title: "Trailing Icon",
-                        trailingIcon: "arrow.right"
-                    ) {
-                        print("Button with trailing icon tapped")
-                    }
-                    
-                    CitrusButton(
-                        title: "Both Icons",
-                        leadingIcon: "star",
-                        trailingIcon: "arrow.right"
-                    ) {
-                        print("Button with both icons tapped")
-                    }
-                }
-                
-                // Toggle Buttons
-                sectionHeader("Toggle Buttons")
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack(spacing: 16) {
-                        CitrusToggleButton(
-                            title: "Toggle Me",
-                            isSelected: isToggled
-                        ) { newValue in
-                            isToggled = newValue
-                            print("Toggle button state: \(newValue)")
-                        }
-                        
-                        Text("Current state: \(isToggled ? "ON" : "OFF")")
-                    }
+                    Text("Gray Buttons")
+                        .font(.headline)
                     
                     HStack(spacing: 16) {
-                        CitrusToggleButton(
-                            title: "Large",
-                            isSelected: true,
-                            size: .large
-                        ) { _ in }
+                        CitrusButton(title: "[Text]", style: .gray, size: .compact) {
+                            print("Compact gray button tapped")
+                        }
                         
-                        CitrusToggleButton(
-                            title: "Medium",
-                            isSelected: true
-                        ) { _ in }
-                        
-                        CitrusToggleButton(
-                            title: "Small",
-                            isSelected: true,
-                            size: .small
-                        ) { _ in }
+                        CitrusButton(title: "[Text]", style: .gray) {
+                            print("Medium gray button tapped")
+                        }
+                    }
+                    
+                    CitrusButton(title: "[Text]", style: .gray, size: .full) {
+                        print("Full width gray button tapped")
                     }
                 }
                 
-                // Disabled State
-                sectionHeader("Disabled State")
-                
+                // Disabled Buttons
                 VStack(alignment: .leading, spacing: 16) {
-                    CitrusButton(
-                        title: "Disabled Button",
-                        isDisabled: true
-                    ) {
-                        print("This won't be called")
+                    Text("Disabled Buttons")
+                        .font(.headline)
+                    
+                    HStack(spacing: 16) {
+                        CitrusButton(title: "[Text]", size: .compact, isDisabled: true) {
+                            print("This won't be called")
+                        }
+                        
+                        CitrusButton(title: "[Text]", isDisabled: true) {
+                            print("This won't be called")
+                        }
                     }
                     
-                    CitrusToggleButton(
-                        title: "Disabled Toggle",
-                        isSelected: true,
-                        isDisabled: true
-                    ) { _ in
+                    CitrusButton(title: "[Text]", size: .full, isDisabled: true) {
                         print("This won't be called")
+                    }
+                }
+                
+                // Real-world Examples
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Real-world Examples")
+                        .font(.headline)
+                    
+                    CitrusButton(title: "Sign In", icon: "person.fill") {
+                        print("Sign in tapped")
+                    }
+                    
+                    CitrusButton(title: "Continue with Apple", style: .outlined, icon: "apple.logo") {
+                        print("Continue with Apple tapped")
+                    }
+                    
+                    CitrusButton(title: "Add to Cart", style: .secondary, icon: "cart.fill.badge.plus") {
+                        print("Add to cart tapped")
+                    }
+                    
+                    CitrusButton(title: "Delete Account", style: .pink, icon: "trash") {
+                        print("Delete account tapped")
                     }
                 }
             }
             .padding()
         }
-    }
-    
-    private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(.title2)
-            .fontWeight(.bold)
-            .padding(.top, 8)
     }
 }
 
